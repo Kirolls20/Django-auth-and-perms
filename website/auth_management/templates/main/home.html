@@ -1,0 +1,34 @@
+{% extends 'main/base.html'%}
+
+{% block content %}
+<h1>Home Page</h1>
+{%for post in posts%}
+   <div class="card text-center">
+  <div class="card-header">
+    by {{post.auther.username}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{post.title}}</h5>
+    <p class="card-text">{{post.body}}</p>
+    {% if request.user == post.auther or perms.auth_management.delete_post %}
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger" name="post-id" value="{{post.id}}">DELETE</button>
+    </form>
+    {% endif %}
+    {% if user.is_staff %}
+    <form method="post">
+      {% csrf_token %}
+      <br>
+      <button type="submit" class="btn btn-warning" name="user_id" value="{{post.auther.id}}">BAN USER</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="card-footer text-muted">
+    {{post.post_date}}
+  </div>
+
+</div>
+
+{% endfor %}
+{% endblock %}
